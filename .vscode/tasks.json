@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "CMake: build",
+        "type": "shell",
+        "command": "cmake --build build --target mkvdb-tests",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$gcc"],
+        "detail": "Generated task by CMake Tools"
+      }
+    ]
+  }

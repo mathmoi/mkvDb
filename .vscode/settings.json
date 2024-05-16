@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "regex": "cpp"
+    },
+    "[cpp]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    }
+}

@@ -1,0 +1,8 @@
+.cache/
+build/
+
+# Exclude .vscode file except a select few.
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
