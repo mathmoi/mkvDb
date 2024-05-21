@@ -1,12 +1,13 @@
-#include <string.h>
+#include "mkvdb/common/MkvDBException.hpp"
 
-#include "mkvDb/common/MkvDBException.hpp"
+#include <string.h>
 
 namespace mkvdb::common
 {
     MkvDBException::MkvDBException(std::string_view message)
     : std::runtime_error(message.data())
-    {}
+    {
+    }
 
     void ThrowFromErrno(std::string_view message)
     {
@@ -16,8 +17,12 @@ namespace mkvdb::common
         int errno_saved = errno;
         char* str_error = strerror(errno_saved);
 
-        std::snprintf(formated_message, formated_message_size, message.data(), errno_saved, str_error);
-        
+        std::snprintf(formated_message,
+                      formated_message_size,
+                      message.data(),
+                      errno_saved,
+                      str_error);
+
         throw MkvDBException(formated_message);
     }
-}
+} // namespace mkvdb::common

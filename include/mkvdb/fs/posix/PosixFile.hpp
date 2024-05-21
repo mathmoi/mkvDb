@@ -1,7 +1,7 @@
 #ifndef MKVDB_FS_POSIX_POSIX_FILE_HPP_
 #define MKVDB_FS_POSIX_POSIX_FILE_HPP_
 
-#include "../IFile.hpp"
+#include "mkvdb/fs/IFile.hpp"
 
 #include <string>
 #include <string_view>

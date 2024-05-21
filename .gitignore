@@ -1,4 +1,4 @@
-.cache/
+\.cache/
 build/
 
 # Exclude .vscode file except a select few.

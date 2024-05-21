@@ -11,8 +11,12 @@ add_executable(mkvdb-tests ${MKVDB_TESTS_SOURCES})
 
 # Link libraries
 target_link_libraries(mkvdb-tests PRIVATE Catch2::Catch2WithMain
-                                          mkvdb-fs)
-add_dependencies(mkvdb-tests mkvdb-fs)
+                                          mkvdb-common
+                                          mkvdb-fs
+                                          mkvdb-pager)
+add_dependencies(mkvdb-tests mkvdb-common
+                             mkvdb-fs
+                             mkvdb-pager)
 
 # Configure CTest
 include(CTest)

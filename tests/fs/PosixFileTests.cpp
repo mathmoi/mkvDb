@@ -1,9 +1,12 @@
+#include "mkvdb/fs/posix/PosixFile.hpp"
+
+#include "mkvdb/common/MkvDBException.hpp"
+#include "mkvdb/common/Types.hpp"
+
 #include "../RandomBlob.hpp"
 #include "../TemporaryFile.hpp"
-#include "catch2/catch_test_macros.hpp"
-#include "mkvDb/common/MkvDBException.hpp"
-#include "mkvDb/common/Types.hpp"
-#include "mkvDb/fs/Posix/PosixFile.hpp"
+
+#include <catch2/catch_test_macros.hpp>
 
 #include <cstddef>
 

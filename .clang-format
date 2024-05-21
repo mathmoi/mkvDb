@@ -56,3 +56,21 @@ Standard: Cpp11
 UseTab: Never
 BraceWrapping:
   SplitEmptyFunction: 'false'
+IncludeCategories:
+  - Regex: '^"mkvDb/common.*"$'
+    Priority: 1
+  - Regex: '^"mkvDb/fs.*"$'
+    Priority: 2
+  - Regex: '^"mkvDb/pager.*"$'
+    Priority: 3
+  - Regex: '^".*"$'
+    Priority: 4
+  - Regex: '^(<|")catch2.*(>|")$'
+    Priority: 5
+  - Regex: '^<.*\.h>$'
+    Priority: 6
+  - Regex: '^<.*>$'
+    Priority: 7
+  - Regex: '.*'
+    Priority: 8
+IncludeIsMainRegex: "(Tests)?$"

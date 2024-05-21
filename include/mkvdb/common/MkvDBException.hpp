@@ -15,7 +15,7 @@ namespace mkvdb::common
 
     // Throw an exception based on the current errno.
     //
-    // Input:
+    // Parameters:
     //  message: The message parameter can contains up to two replacement fields
     //           representing the errno number (%1$d) and the errno description
     //           returned by "strerror(errno)" (%2$s).
