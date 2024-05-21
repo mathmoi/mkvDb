@@ -84,7 +84,7 @@ namespace mkvdb::pager
     void Header::pages_count(Page::PageIndex count)
     {
         common::Serialize(count, pages_count_span());
-        // TODO : Make page_->SetModified() so it will be written to disk.
+        page_->MarkAsModified();
     }
 
 } // namespace mkvdb::pager
