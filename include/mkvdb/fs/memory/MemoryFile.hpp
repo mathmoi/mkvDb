@@ -45,7 +45,7 @@ namespace mkvdb::fs::memory
         void Sync();
 
         // Get the file size.
-        common::FileOffset size() const;
+        common::FileSize size() const;
 
         // Returns a bytespan on the content of the file.
         inline common::ConstByteSpan data() const { return data_; }

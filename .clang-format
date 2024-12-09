@@ -1,5 +1,5 @@
 ﻿AccessModifierOffset: '-4'
-AlignConsecutiveAssignments: 'true'
+AlignConsecutiveAssignments: 'AcrossEmptyLines'
 AlignConsecutiveDeclarations: 'false'
 AlignEscapedNewlines: Right
 AlignOperands: 'true'
@@ -63,7 +63,7 @@ IncludeCategories:
     Priority: 2
   - Regex: '^"mkvDb/pager.*"$'
     Priority: 3
-  - Regex: '^".*"$'
+  - Regex: '^"(?!catch2).*"$'
     Priority: 4
   - Regex: '^(<|")catch2.*(>|")$'
     Priority: 5

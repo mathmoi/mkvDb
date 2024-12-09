@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace mkvdb::tests
+namespace mkvdb::tests::utils
 {
     // This class provide a temporary filename (does not create the file). When
     // the object is destroyed if the file exists it deletes it.
@@ -24,6 +24,6 @@ namespace mkvdb::tests
 
         static std::string GenerateRandomName();
     };
-} // namespace mkvdb::tests
+} // namespace mkvdb::tests::utils
 
 #endif // MKVDB_TESTS_TEMPORARY_FILE_HPP_

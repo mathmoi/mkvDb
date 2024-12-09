@@ -3,136 +3,140 @@
 #include "mkvdb/common/MkvDBException.hpp"
 #include "mkvdb/common/Types.hpp"
 
-#include "../RandomBlob.hpp"
+#include "../utils/RandomBlob.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstddef>
 
-using namespace mkvdb::fs::memory;
-
-TEST_CASE("MemoryFileCreate_CreateAFile_NothingThrows")
+namespace mkvdb::tests::fs
 {
-    MemoryFile sut;
+    using namespace mkvdb::fs::memory;
 
-    CHECK_NOTHROW(sut.Create());
-    CHECK_NOTHROW(sut.Close());
-}
+    TEST_CASE("MemoryFileCreate_CreateAFile_NothingThrows")
+    {
+        MemoryFile sut;
 
-TEST_CASE("MemoryFileCreate_FileAlreadyOpened_Throws")
-{
-    MemoryFile sut;
-    sut.Create();
+        CHECK_NOTHROW(sut.Create());
+        CHECK_NOTHROW(sut.Close());
+    }
 
-    CHECK_THROWS_AS(sut.Create(), mkvdb::common::MkvDBException);
-}
+    TEST_CASE("MemoryFileCreate_FileAlreadyOpened_Throws")
+    {
+        MemoryFile sut;
+        sut.Create();
 
-TEST_CASE("MemoryFileClose_FileIsNotOpened_Throws")
-{
-    MemoryFile sut;
+        CHECK_THROWS_AS(sut.Create(), mkvdb::common::MkvDBException);
+    }
 
-    CHECK_THROWS_AS(sut.Close(), mkvdb::common::MkvDBException);
-}
+    TEST_CASE("MemoryFileClose_FileIsNotOpened_Throws")
+    {
+        MemoryFile sut;
 
-TEST_CASE("MemoryFileOpen_CreateAFileThenOpenIt_NothingThrows")
-{
-    MemoryFile sut;
+        CHECK_THROWS_AS(sut.Close(), mkvdb::common::MkvDBException);
+    }
 
-    CHECK_NOTHROW(sut.Create());
-    CHECK_NOTHROW(sut.Close());
-    CHECK_NOTHROW(sut.Open());
-    CHECK_NOTHROW(sut.Close());
-}
+    TEST_CASE("MemoryFileOpen_CreateAFileThenOpenIt_NothingThrows")
+    {
+        MemoryFile sut;
 
-TEST_CASE("MemoryFileDelete_FileIsOpened_throws")
-{
-    MemoryFile sut;
-    sut.Create();
+        CHECK_NOTHROW(sut.Create());
+        CHECK_NOTHROW(sut.Close());
+        CHECK_NOTHROW(sut.Open());
+        CHECK_NOTHROW(sut.Close());
+    }
 
-    CHECK_THROWS(sut.Delete());
-}
+    TEST_CASE("MemoryFileDelete_FileIsOpened_throws")
+    {
+        MemoryFile sut;
+        sut.Create();
 
-TEST_CASE("MemoryFileWrite_NormalCase_NothingTrows")
-{
-    mkvdb::tests::RandomBlob test_data;
-    MemoryFile sut;
-    sut.Create();
+        CHECK_THROWS(sut.Delete());
+    }
 
-    CHECK_NOTHROW(sut.Write(test_data.data(), 0));
-}
+    TEST_CASE("MemoryFileWrite_NormalCase_NothingTrows")
+    {
+        utils::RandomBlob test_data;
+        MemoryFile sut;
+        sut.Create();
 
-TEST_CASE("MemoryFileWrite_FileNotOpened_Throws")
-{
-    mkvdb::tests::RandomBlob test_data;
-    MemoryFile sut;
+        CHECK_NOTHROW(sut.Write(test_data.data(), 0));
+    }
 
-    CHECK_THROWS_AS(sut.Write(test_data.data(), 0), mkvdb::common::MkvDBException);
-}
+    TEST_CASE("MemoryFileWrite_FileNotOpened_Throws")
+    {
+        utils::RandomBlob test_data;
+        MemoryFile sut;
 
-TEST_CASE("MemoryFileRead_FileNotOpened_Throws")
-{
-    MemoryFile sut;
-    std::vector<std::byte> buffer(1024);
+        CHECK_THROWS_AS(sut.Write(test_data.data(), 0), mkvdb::common::MkvDBException);
+    }
 
-    CHECK_THROWS_AS(sut.Read(mkvdb::common::ByteSpan(buffer.data(), buffer.size()), 0),
-                    mkvdb::common::MkvDBException);
-}
+    TEST_CASE("MemoryFileRead_FileNotOpened_Throws")
+    {
+        MemoryFile sut;
+        std::vector<std::byte> buffer(1024);
 
-TEST_CASE("MemoryFileRead_NormalCase_DataIsRead")
-{
-    mkvdb::tests::RandomBlob test_data;
-    MemoryFile sut;
-    sut.Create();
-    sut.Write(test_data.data(), 0);
-    std::vector<std::byte> result(test_data.size());
+        CHECK_THROWS_AS(
+          sut.Read(mkvdb::common::ByteSpan(buffer.data(), buffer.size()), 0),
+          mkvdb::common::MkvDBException);
+    }
 
-    sut.Read(mkvdb::common::ByteSpan(result.data(), result.size()), 0);
+    TEST_CASE("MemoryFileRead_NormalCase_DataIsRead")
+    {
+        utils::RandomBlob test_data;
+        MemoryFile sut;
+        sut.Create();
+        sut.Write(test_data.data(), 0);
+        std::vector<std::byte> result(test_data.size());
 
-    REQUIRE(std::equal(test_data.begin(), test_data.end(), result.begin()));
-}
+        sut.Read(mkvdb::common::ByteSpan(result.data(), result.size()), 0);
 
-TEST_CASE("MemoryFileRead_ReadDataWithAnOffset_DataIsRead")
-{
-    mkvdb::tests::RandomBlob test_data;
-    MemoryFile sut;
-    sut.Create();
-    sut.Write(test_data.data(), 1024);
-    std::vector<std::byte> result(test_data.size());
+        REQUIRE(std::equal(test_data.begin(), test_data.end(), result.begin()));
+    }
 
-    sut.Read(mkvdb::common::ByteSpan(result.data(), result.size()), 1024);
+    TEST_CASE("MemoryFileRead_ReadDataWithAnOffset_DataIsRead")
+    {
+        utils::RandomBlob test_data;
+        MemoryFile sut;
+        sut.Create();
+        sut.Write(test_data.data(), 1024);
+        std::vector<std::byte> result(test_data.size());
 
-    REQUIRE(std::equal(test_data.begin(), test_data.end(), result.begin()));
-}
+        sut.Read(mkvdb::common::ByteSpan(result.data(), result.size()), 1024);
 
-TEST_CASE("MemoryFileSync_NormalCase_NothingThrows")
-{
-    mkvdb::tests::RandomBlob test_data;
-    MemoryFile sut;
-    sut.Create();
-    sut.Write(test_data.data(), 1024);
+        REQUIRE(std::equal(test_data.begin(), test_data.end(), result.begin()));
+    }
 
-    CHECK_NOTHROW(sut.Sync());
-}
+    TEST_CASE("MemoryFileSync_NormalCase_NothingThrows")
+    {
+        utils::RandomBlob test_data;
+        MemoryFile sut;
+        sut.Create();
+        sut.Write(test_data.data(), 1024);
 
-TEST_CASE("MemoryFileSize_NormalCase_ReturnsCorrectSize")
-{
-    const mkvdb::common::FileOffset expected = 256;
-    mkvdb::tests::RandomBlob test_data(expected);
-    MemoryFile sut;
-    sut.Create();
-    sut.Write(test_data.data(), 0);
+        CHECK_NOTHROW(sut.Sync());
+    }
 
-    auto result = sut.size();
+    TEST_CASE("MemoryFileSize_NormalCase_ReturnsCorrectSize")
+    {
+        const mkvdb::common::FileSize expected = 256;
+        utils::RandomBlob test_data(expected);
+        MemoryFile sut;
+        sut.Create();
+        sut.Write(test_data.data(), 0);
 
-    REQUIRE(expected == result);
-}
+        auto result = sut.size();
 
-TEST_CASE("MemoryFileSize_FileNotOpened_Throws")
-{
-    mkvdb::tests::RandomBlob test_data;
-    MemoryFile sut;
-    sut.Create();
-    sut.Close();
+        REQUIRE(expected == result);
+    }
 
-    CHECK_THROWS_AS(sut.size(), mkvdb::common::MkvDBException);
-}
+    TEST_CASE("MemoryFileSize_FileNotOpened_Throws")
+    {
+        utils::RandomBlob test_data;
+        MemoryFile sut;
+        sut.Create();
+        sut.Close();
+
+        CHECK_THROWS_AS(sut.size(), mkvdb::common::MkvDBException);
+    }
+} // namespace mkvdb::tests::fs

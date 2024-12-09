@@ -35,7 +35,7 @@ namespace mkvdb::fs::posix
         int flags   = O_RDWR | O_CREAT | O_EXCL;
         mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
 
-        int fd = open(filename_.c_str(), flags, mode);
+        int fd      = open(filename_.c_str(), flags, mode);
         if(fd == -1)
         {
             common::ThrowFromErrno(
@@ -157,7 +157,7 @@ namespace mkvdb::fs::posix
         }
     }
 
-    common::FileOffset PosixFile::size() const
+    common::FileSize PosixFile::size() const
     {
         if(fd_ == INVALID_FD)
         {

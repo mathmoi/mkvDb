@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <random>
 
-namespace mkvdb::tests
+namespace mkvdb::tests::utils
 {
     RandomBlob::RandomBlob(size_t size)
     : data_(size)
@@ -17,4 +17,4 @@ namespace mkvdb::tests
                       data_.end(),
                       [&]() { return static_cast<std::byte>(dis(gen)); });
     }
-} // namespace mkvdb::tests
+} // namespace mkvdb::tests::utils

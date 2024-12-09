@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <random>
 
-namespace mkvdb::tests
+namespace mkvdb::tests::utils
 {
     TemporaryFile::TemporaryFile()
     {
@@ -41,4 +41,4 @@ namespace mkvdb::tests
 
         return random_name;
     }
-} // namespace mkvdb::tests
+} // namespace mkvdb::tests::utils

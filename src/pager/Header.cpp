@@ -10,16 +10,16 @@
 
 namespace mkvdb::pager
 {
-    const common::FileOffset Header::HEADER_SIZE =
+    const common::FileSize Header::HEADER_SIZE =
       Header::PAGES_COUNT_OFFSET + Header::PAGES_COUNT_SIZE;
 
     const std::string Header::MAGIC_STRING = "mkvDB file v1";
 
-    common::FileOffset Header::ReadPageSize(fs::IFile& file)
+    common::FileSize Header::ReadPageSize(fs::IFile& file)
     {
         std::array<std::byte, PAGE_SIZE_SIZE> buffer;
         file.Read(buffer, PAGE_SIZE_OFFSET);
-        common::FileOffset log_2_page_size = common::Deserialize<std::uint8_t>(buffer);
+        common::FileSize log_2_page_size = common::Deserialize<std::uint8_t>(buffer);
         return 1 << log_2_page_size;
     }
 

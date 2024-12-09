@@ -44,7 +44,7 @@ namespace mkvdb::fs::posix
         void Sync();
 
         // Get the file size.
-        common::FileOffset size() const;
+        common::FileSize size() const;
 
     private:
         const int INVALID_FD = -1;

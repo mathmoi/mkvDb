@@ -14,7 +14,13 @@ namespace mkvdb::common
     typedef std::span<const std::byte> ConstByteSpan;
 
     // Offset in a file
-    typedef std::uint64_t FileOffset;
+    typedef std::int64_t FileOffset;
+
+    // Size of a file or part of a file
+    typedef std::uint64_t FileSize;
+
+    // Type to represents the size of a key or a value.
+    typedef std::uint64_t KeyValueSize;
 
 } // namespace mkvdb::common
 

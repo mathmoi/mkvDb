@@ -4,7 +4,7 @@
 
 #include "mkvdb/pager/Header.hpp"
 
-#include "../RandomBlob.hpp"
+#include "../utils/RandomBlob.hpp"
 #include "catch2/matchers/catch_matchers_range_equals.hpp"
 
 #include <catch2/catch_test_macros.hpp>
@@ -15,6 +15,7 @@
 using namespace mkvdb::fs::memory;
 using namespace mkvdb::pager;
 using namespace mkvdb::tests;
+using namespace mkvdb::tests::utils;
 
 TEST_CASE("Pager::GetNewPage returns a new page with the correct index")
 {

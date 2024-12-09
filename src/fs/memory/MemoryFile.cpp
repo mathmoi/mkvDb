@@ -93,7 +93,7 @@ namespace mkvdb::fs::memory
         // Nothing to do.
     }
 
-    common::FileOffset MemoryFile::size() const
+    common::FileSize MemoryFile::size() const
     {
         if(!is_opened_)
         {

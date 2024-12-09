@@ -12,7 +12,10 @@ namespace mkvdb::pager
     class Page
     {
     public:
-        typedef common::FileOffset PageSize;
+        // Types to represents the size of a page or part of a page.
+        typedef common::FileSize PageSize;
+
+        // Type to represents the index of a page in the database
         typedef std::uint32_t PageIndex;
 
         // Constructor.

@@ -27,10 +27,10 @@ namespace mkvdb::pager
     class Header
     {
     public:
-        static const common::FileOffset HEADER_SIZE;
+        static const common::FileSize HEADER_SIZE;
 
         // Read the page size from a file.
-        static common::FileOffset ReadPageSize(fs::IFile& file);
+        static common::FileSize ReadPageSize(fs::IFile& file);
 
         // Initialize the header of a new database
         // Input:
@@ -56,9 +56,9 @@ namespace mkvdb::pager
     private:
         static const std::string MAGIC_STRING;
 
-        static const common::FileOffset MAGIC_STRING_SIZE = 16;
-        static const common::FileOffset PAGE_SIZE_SIZE    = 1;
-        static const common::FileOffset PAGES_COUNT_SIZE  = 4;
+        static const common::FileSize MAGIC_STRING_SIZE     = 16;
+        static const common::FileSize PAGE_SIZE_SIZE        = 1;
+        static const common::FileSize PAGES_COUNT_SIZE      = 4;
 
         static const common::FileOffset MAGIC_STRING_OFFSET = 0;
         static const common::FileOffset PAGE_SIZE_OFFSET =

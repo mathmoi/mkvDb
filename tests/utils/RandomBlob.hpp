@@ -5,7 +5,7 @@
 #include <span>
 #include <vector>
 
-namespace mkvdb::tests
+namespace mkvdb::tests::utils
 {
     // This class generates random block of bytes that can be used during tests.
     class RandomBlob
@@ -29,6 +29,6 @@ namespace mkvdb::tests
     private:
         std::vector<std::byte> data_;
     };
-} // namespace mkvdb::tests
+} // namespace mkvdb::tests::utils
 
 #endif // MKVDB_TESTS_RANDOM_BLOB_HPP_

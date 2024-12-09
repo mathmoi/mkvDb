@@ -38,7 +38,7 @@ namespace mkvdb::fs
         virtual void Sync() = 0;
 
         // Get the file size.
-        virtual common::FileOffset size() const = 0;
+        virtual common::FileSize size() const = 0;
     };
 } // namespace mkvdb::fs
 

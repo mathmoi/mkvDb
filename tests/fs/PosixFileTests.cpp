@@ -3,170 +3,174 @@
 #include "mkvdb/common/MkvDBException.hpp"
 #include "mkvdb/common/Types.hpp"
 
-#include "../RandomBlob.hpp"
-#include "../TemporaryFile.hpp"
+#include "../utils/RandomBlob.hpp"
+#include "../utils/TemporaryFile.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
 #include <cstddef>
 
-using namespace mkvdb::fs::posix;
-
-TEST_CASE("PosixFileCreate_CreateAFile_NothingThrows")
+namespace mkvdb::tests::fs
 {
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
+    using namespace mkvdb::fs::posix;
 
-    CHECK_NOTHROW(sut.Create());
-    CHECK_NOTHROW(sut.Close());
-}
+    TEST_CASE("PosixFileCreate_CreateAFile_NothingThrows")
+    {
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
 
-TEST_CASE("PosixFileCreate_FileAlreadyOpened_Throws")
-{
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    sut.Create();
+        CHECK_NOTHROW(sut.Create());
+        CHECK_NOTHROW(sut.Close());
+    }
 
-    CHECK_THROWS_AS(sut.Create(), mkvdb::common::MkvDBException);
-}
+    TEST_CASE("PosixFileCreate_FileAlreadyOpened_Throws")
+    {
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        sut.Create();
 
-TEST_CASE("PosixFileCreate_FileAlreadyExists_Throws")
-{
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile file(temp_file.filename());
-    file.Create();
-    file.Close();
+        CHECK_THROWS_AS(sut.Create(), mkvdb::common::MkvDBException);
+    }
 
-    PosixFile sut(temp_file.filename());
+    TEST_CASE("PosixFileCreate_FileAlreadyExists_Throws")
+    {
+        utils::TemporaryFile temp_file;
+        PosixFile file(temp_file.filename());
+        file.Create();
+        file.Close();
 
-    CHECK_THROWS_AS(sut.Create(), mkvdb::common::MkvDBException);
-}
+        PosixFile sut(temp_file.filename());
 
-TEST_CASE("PosixFileClose_FileIsNotOpened_Throws")
-{
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
+        CHECK_THROWS_AS(sut.Create(), mkvdb::common::MkvDBException);
+    }
 
-    CHECK_THROWS_AS(sut.Close(), mkvdb::common::MkvDBException);
-}
+    TEST_CASE("PosixFileClose_FileIsNotOpened_Throws")
+    {
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
 
-TEST_CASE("PosixFileOpen_CreateAFileThenOpenIt_NothingThrows")
-{
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
+        CHECK_THROWS_AS(sut.Close(), mkvdb::common::MkvDBException);
+    }
 
-    CHECK_NOTHROW(sut.Create());
-    CHECK_NOTHROW(sut.Close());
-    CHECK_NOTHROW(sut.Open());
-    CHECK_NOTHROW(sut.Close());
-}
+    TEST_CASE("PosixFileOpen_CreateAFileThenOpenIt_NothingThrows")
+    {
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
 
-TEST_CASE("PosixFileDelete_FileIsOpened_throws")
-{
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    sut.Create();
+        CHECK_NOTHROW(sut.Create());
+        CHECK_NOTHROW(sut.Close());
+        CHECK_NOTHROW(sut.Open());
+        CHECK_NOTHROW(sut.Close());
+    }
 
-    CHECK_THROWS(sut.Delete());
-}
+    TEST_CASE("PosixFileDelete_FileIsOpened_throws")
+    {
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        sut.Create();
 
-TEST_CASE("PosixFileDelete_FileDoesNotExists_throws")
-{
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
+        CHECK_THROWS(sut.Delete());
+    }
 
-    CHECK_THROWS(sut.Delete());
-}
+    TEST_CASE("PosixFileDelete_FileDoesNotExists_throws")
+    {
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
 
-TEST_CASE("PosixFileWrite_NormalCase_NothingTrows")
-{
-    mkvdb::tests::RandomBlob test_data;
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    sut.Create();
+        CHECK_THROWS(sut.Delete());
+    }
 
-    CHECK_NOTHROW(sut.Write(test_data.data(), 0));
-}
+    TEST_CASE("PosixFileWrite_NormalCase_NothingTrows")
+    {
+        utils::RandomBlob test_data;
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        sut.Create();
 
-TEST_CASE("PosixFileWrite_FileNotOpened_Throws")
-{
-    mkvdb::tests::RandomBlob test_data;
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
+        CHECK_NOTHROW(sut.Write(test_data.data(), 0));
+    }
 
-    CHECK_THROWS_AS(sut.Write(test_data.data(), 0), mkvdb::common::MkvDBException);
-}
+    TEST_CASE("PosixFileWrite_FileNotOpened_Throws")
+    {
+        utils::RandomBlob test_data;
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
 
-TEST_CASE("PosixFileRead_FileNotOpened_Throws")
-{
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    std::vector<std::byte> buffer(1024);
+        CHECK_THROWS_AS(sut.Write(test_data.data(), 0), mkvdb::common::MkvDBException);
+    }
 
-    CHECK_THROWS_AS(sut.Read(mkvdb::common::ByteSpan(buffer.data(), buffer.size()), 0),
-                    mkvdb::common::MkvDBException);
-}
+    TEST_CASE("PosixFileRead_FileNotOpened_Throws")
+    {
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        std::vector<std::byte> buffer(1024);
 
-TEST_CASE("PosixFileRead_NormalCase_DataIsRead")
-{
-    mkvdb::tests::RandomBlob test_data;
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    sut.Create();
-    sut.Write(test_data.data(), 0);
-    std::vector<std::byte> result(test_data.size());
+        CHECK_THROWS_AS(
+          sut.Read(mkvdb::common::ByteSpan(buffer.data(), buffer.size()), 0),
+          mkvdb::common::MkvDBException);
+    }
 
-    sut.Read(mkvdb::common::ByteSpan(result.data(), result.size()), 0);
+    TEST_CASE("PosixFileRead_NormalCase_DataIsRead")
+    {
+        utils::RandomBlob test_data;
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        sut.Create();
+        sut.Write(test_data.data(), 0);
+        std::vector<std::byte> result(test_data.size());
 
-    REQUIRE(std::equal(test_data.begin(), test_data.end(), result.begin()));
-}
+        sut.Read(mkvdb::common::ByteSpan(result.data(), result.size()), 0);
 
-TEST_CASE("PosixFileRead_ReadDataWithAnOffset_DataIsRead")
-{
-    mkvdb::tests::RandomBlob test_data;
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    sut.Create();
-    sut.Write(test_data.data(), 1024);
-    std::vector<std::byte> result(test_data.size());
+        REQUIRE(std::equal(test_data.begin(), test_data.end(), result.begin()));
+    }
 
-    sut.Read(mkvdb::common::ByteSpan(result.data(), result.size()), 1024);
+    TEST_CASE("PosixFileRead_ReadDataWithAnOffset_DataIsRead")
+    {
+        utils::RandomBlob test_data;
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        sut.Create();
+        sut.Write(test_data.data(), 1024);
+        std::vector<std::byte> result(test_data.size());
 
-    REQUIRE(std::equal(test_data.begin(), test_data.end(), result.begin()));
-}
+        sut.Read(mkvdb::common::ByteSpan(result.data(), result.size()), 1024);
 
-TEST_CASE("PosixFileSync_NormalCase_NothingThrows")
-{
-    mkvdb::tests::RandomBlob test_data;
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    sut.Create();
-    sut.Write(test_data.data(), 1024);
+        REQUIRE(std::equal(test_data.begin(), test_data.end(), result.begin()));
+    }
 
-    CHECK_NOTHROW(sut.Sync());
-}
+    TEST_CASE("PosixFileSync_NormalCase_NothingThrows")
+    {
+        utils::RandomBlob test_data;
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        sut.Create();
+        sut.Write(test_data.data(), 1024);
 
-TEST_CASE("PosixFileSize_NormalCase_ReturnsCorrectSize")
-{
-    const mkvdb::common::FileOffset expected = 256;
-    mkvdb::tests::RandomBlob test_data(expected);
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    sut.Create();
-    sut.Write(test_data.data(), 0);
+        CHECK_NOTHROW(sut.Sync());
+    }
 
-    auto result = sut.size();
+    TEST_CASE("PosixFileSize_NormalCase_ReturnsCorrectSize")
+    {
+        const mkvdb::common::FileSize expected = 256;
+        utils::RandomBlob test_data(expected);
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        sut.Create();
+        sut.Write(test_data.data(), 0);
 
-    REQUIRE(expected == result);
-}
+        auto result = sut.size();
 
-TEST_CASE("PosixFileSize_FileNotOpened_Throws")
-{
-    mkvdb::tests::RandomBlob test_data;
-    mkvdb::tests::TemporaryFile temp_file;
-    PosixFile sut(temp_file.filename());
-    sut.Create();
-    sut.Close();
+        REQUIRE(expected == result);
+    }
 
-    CHECK_THROWS_AS(sut.size(), mkvdb::common::MkvDBException);
-}
+    TEST_CASE("PosixFileSize_FileNotOpened_Throws")
+    {
+        utils::RandomBlob test_data;
+        utils::TemporaryFile temp_file;
+        PosixFile sut(temp_file.filename());
+        sut.Create();
+        sut.Close();
+
+        CHECK_THROWS_AS(sut.size(), mkvdb::common::MkvDBException);
+    }
+} // namespace mkvdb::tests::fs
