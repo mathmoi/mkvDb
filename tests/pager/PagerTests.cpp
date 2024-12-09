@@ -1,5 +1,7 @@
 #include "mkvdb/pager/Pager.hpp"
 
+#include "mkvdb/common/Types.hpp"
+
 #include "mkvdb/fs/memory/MemoryFile.hpp"
 
 #include "mkvdb/pager/Header.hpp"
@@ -77,9 +79,8 @@ TEST_CASE("Pager::GetPage returns the correct page content")
 
     auto page = sut.GetPage(index);
 
-    REQUIRE_THAT(
-      page->data(),
-      Catch::Matchers::RangeEquals(blob.data().subspan(page_size * index, page_size)));
+    REQUIRE_THAT(page->buffer_view().const_span(),
+                 Catch::Matchers::RangeEquals(blob.data().subspan(page_size * index, page_size)));
 }
 
 TEST_CASE("Pager::WriteModifiedPages write the pages marked as modified")
@@ -98,18 +99,20 @@ TEST_CASE("Pager::WriteModifiedPages write the pages marked as modified")
     Pager sut(file);
 
     auto page = sut.GetPage(index_modified_page);
-    std::copy(modified_page_content.data().begin(),
-              modified_page_content.data().end(),
-              page->data().begin());
-    page->MarkAsModified();
+    page->buffer_view().Mutate(
+      [&modified_page_content](mkvdb::common::ByteSpan span)
+      {
+          std::copy(modified_page_content.data().begin(),
+                    modified_page_content.data().end(),
+                    span.begin());
+      });
     sut.WriteModifiedPages();
 
     REQUIRE_THAT(file.data().subspan(index_modified_page * page_size, page_size),
                  Catch::Matchers::RangeEquals(modified_page_content.data()));
-    REQUIRE_THAT(
-      file.data().subspan(index_unmodified_page * page_size, page_size),
-      Catch::Matchers::RangeEquals(
-        original_content.data().subspan(index_unmodified_page * page_size, page_size)));
+    REQUIRE_THAT(file.data().subspan(index_unmodified_page * page_size, page_size),
+                 Catch::Matchers::RangeEquals(
+                   original_content.data().subspan(index_unmodified_page * page_size, page_size)));
 }
 
 TEST_CASE("Pager::WriteModifiedPages pages not marked as modified are not written")
@@ -127,12 +130,16 @@ TEST_CASE("Pager::WriteModifiedPages pages not marked as modified are not writte
     Pager sut(file);
 
     auto page = sut.GetPage(index);
-    std::copy(modified_page_content.data().begin(),
-              modified_page_content.data().end(),
-              page->data().begin());
+    page->buffer_view().Mutate(
+      [&modified_page_content](mkvdb::common::ByteSpan span)
+      {
+          std::copy(modified_page_content.data().begin(),
+                    modified_page_content.data().end(),
+                    span.begin());
+      });
     sut.WriteModifiedPages();
 
-    REQUIRE_THAT(file.data().subspan(index * page_size, page_size),
-                 Catch::Matchers::RangeEquals(
-                   original_content.data().subspan(index * page_size, page_size)));
+    REQUIRE_THAT(
+      file.data().subspan(index * page_size, page_size),
+      Catch::Matchers::RangeEquals(original_content.data().subspan(index * page_size, page_size)));
 }

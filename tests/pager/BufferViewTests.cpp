@@ -32,7 +32,7 @@ TEST_CASE("BufferView::buffer() returns a byte span to to buffer")
 
     BufferView sut(buffer);
 
-    auto result = sut.buffer();
+    auto result = sut.const_span();
 
     REQUIRE(BUFFER_SIZE == result.size());
     REQUIRE(std::equal(blob.begin(), blob.end(), result.begin()));
@@ -72,10 +72,10 @@ TEST_CASE(
 
     auto result = sut.GetSubView(SUB_BUFFER_OFFSET, SUB_BUFFER_SIZE);
 
-    REQUIRE(SUB_BUFFER_SIZE == result.buffer().size());
+    REQUIRE(SUB_BUFFER_SIZE == result.const_span().size());
     REQUIRE(std::equal(buffer.begin() + SUB_BUFFER_OFFSET,
                        buffer.begin() + SUB_BUFFER_OFFSET + SUB_BUFFER_SIZE,
-                       result.buffer().begin()));
+                       result.const_span().begin()));
 }
 
 TEST_CASE("BufferView::Mutate will mark parents views as modified.")

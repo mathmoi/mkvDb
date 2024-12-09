@@ -1,35 +1,18 @@
-#ifndef MKVDB_PAGER_BUFFER_VIEW_HPP_
-#define MKVDB_PAGER_BUFFER_VIEW_HPP_
+#ifndef MKVDB_COMMON_PAGER_BUFFER_HPP_
+#define MKVDB_COMMON_PAGER_BUFFER_HPP_
 
 #include "mkvdb/common/Types.hpp"
 
-#include <cassert>
-#include <functional>
+#include <cstddef>
+#include <memory>
 
 namespace mkvdb::pager
 {
-    // Represents a view on a modifiable buffer of bytes. When the buffer is modified through
-    // this view, it is marked as such. This class provides functionality to create sub-views
-    // of itself. Modifying a sub-view also marks the parent view as modified.
-    class BufferView
+
+    class Buffer
     {
     public:
-        // Creates a BufferView for the given data buffer. This BufferView has no parent.
-        // Parameters:
-        //   buffer: The byte span representing the data buffer to view.
-        BufferView(common::ByteSpan buffer)
-        : BufferView(buffer, nullptr)
-        {
-        }
-
-        BufferView(const BufferView& other)
-        : buffer_(other.buffer_),
-          parent_(other.parent_),
-          is_modified_(other.is_modified_)
-        {
-        }
-
-        // Returns true if the BufferView is marked as modified.
+        // Returns true if the Buffer is marked as modified.
         bool is_modified() const { return is_modified_; }
 
         // Returns a read-only span of the buffer.
@@ -61,26 +44,10 @@ namespace mkvdb::pager
         }
 
     private:
-        common::ByteSpan buffer_;
-        BufferView* parent_;
+        std::unique_ptr<std::byte[]> data_;
+        common::FileOffset size_;
         bool is_modified_;
-
-        BufferView(common::ByteSpan buffer, BufferView* parent)
-        : buffer_(buffer),
-          parent_(parent),
-          is_modified_(false)
-        {
-        }
-
-        void MarkAsModified()
-        {
-            is_modified_ = true;
-            if(parent_ != nullptr)
-            {
-                parent_->MarkAsModified();
-            }
-        }
     };
 } // namespace mkvdb::pager
 
-#endif // #ifndef MKVDB_PAGER_BUFFER_VIEW_HPP_
+#endif // MKVDB_COMMON_PAGER_BUFFER_HPP_

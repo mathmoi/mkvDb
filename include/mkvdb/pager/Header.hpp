@@ -6,6 +6,7 @@
 
 #include "mkvdb/fs/IFile.hpp"
 
+#include "mkvdb/pager/BufferView.hpp"
 #include "mkvdb/pager/Page.hpp"
 
 namespace mkvdb::pager
@@ -15,14 +16,13 @@ namespace mkvdb::pager
     // The headers is structured like this :
     //
     //    Offset Size Description
-    //    ------ ---- -------------------------------------------------------------------
-    //     0      16  Magic string identifying this file as a mkvDB file. It's content
-    //                is "mkvDB file v1\0\0\0". The ten first characters will never
-    //                change. The version number part might change in future versions of
-    //                the library.
-    //     16     1   Log base 2 of page size. This value must be between 9 and 16. The
-    //                page size of the data base can be calculated by shifting 0x1 left
-    //                by this value.
+    //    ------ ---- ------------------------------------------------------------------------------
+    //     0      16  Magic string identifying this file as a mkvDB file. It's content is "mkvDB
+    //                file v1\0\0\0". The ten first characters will never change. The version number
+    //                part might change in future versions of the library.
+    //     16     1   Log base 2 of page size. This value must be between 9 and 16. This allows
+    //                pages size that are power of two between 512 and 65536. The page size of the
+    //                database can be calculated by shifting 0x1 left by this value.
     //     17     4   Size of the database file in pages.
     class Header
     {
@@ -61,30 +61,28 @@ namespace mkvdb::pager
         static const common::FileOffset PAGES_COUNT_SIZE  = 4;
 
         static const common::FileOffset MAGIC_STRING_OFFSET = 0;
-        static const common::FileOffset PAGE_SIZE_OFFSET =
-          MAGIC_STRING_OFFSET + MAGIC_STRING_SIZE;
-        static const common::FileOffset PAGES_COUNT_OFFSET =
-          PAGE_SIZE_OFFSET + PAGE_SIZE_SIZE;
+        static const common::FileOffset PAGE_SIZE_OFFSET = MAGIC_STRING_OFFSET + MAGIC_STRING_SIZE;
+        static const common::FileOffset PAGES_COUNT_OFFSET = PAGE_SIZE_OFFSET + PAGE_SIZE_SIZE;
 
-        inline common::ByteSpan pages_count_span() const;
+        inline BufferView pages_count_buffer_view() const;
 
         std::shared_ptr<Page> page_;
     };
 
-    common::ByteSpan Header::pages_count_span() const
+    BufferView Header::pages_count_buffer_view() const
     {
-        return page_->data().subspan(PAGES_COUNT_OFFSET, PAGES_COUNT_SIZE);
+        return page_->buffer_view().GetSubView(PAGES_COUNT_OFFSET, PAGES_COUNT_SIZE);
     }
 
     Page::PageIndex Header::pages_count() const
     {
-        return common::Deserialize<Page::PageIndex>(pages_count_span());
+        return common::Deserialize<Page::PageIndex>(pages_count_buffer_view().const_span());
     }
 
     void Header::pages_count(Page::PageIndex count)
     {
-        common::Serialize(count, pages_count_span());
-        page_->MarkAsModified();
+        pages_count_buffer_view().Mutate([count](common::ByteSpan x)
+                                         { common::Serialize(count, x); });
     }
 
 } // namespace mkvdb::pager

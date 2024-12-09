@@ -2,30 +2,21 @@
 
 #include "mkvdb/common/Types.hpp"
 
-#include "mkvdb/pager/Header.hpp"
-
 #include <memory>
 
 namespace mkvdb::pager
 {
     Page::Page(PageIndex index, PageSize size)
     : index_(index),
-      size_(size),
-      is_modified_(false),
-      data_(std::make_unique<std::byte[]>(size_))
+      data_(std::make_unique<std::byte[]>(size)),
+      buffer_view_(common::ByteSpan(data_.get(), size))
     {
     }
 
-    common::ByteSpan Page::content() const
+    Page::Page(PageIndex index, std::unique_ptr<std::byte[]>&& data, PageSize size)
+    : index_(index),
+      data_(std::move(data)),
+      buffer_view_(common::ByteSpan(data_.get(), size))
     {
-        auto begin = data_.get();
-        auto end   = begin + size_;
-
-        if(index_ == 0)
-        {
-            begin += Header::HEADER_SIZE;
-        }
-
-        return common::ByteSpan(begin, end);
     }
 } // namespace mkvdb::pager

@@ -9,6 +9,7 @@
 #include <catch2/generators/catch_generators.hpp>
 
 #include <cstddef>
+#include <memory>
 #include <tuple>
 
 using namespace mkvdb;
@@ -74,8 +75,12 @@ TEST_CASE("Header::Initialize the number of pages in the database is one")
 
 TEST_CASE("Header::pages_count(...) correctly changes the page count")
 {
-    auto page = std::make_shared<Page>(0, 512);
-    common::SerializeHex("6d6b7644422066696c652076310000000989c9c0f6", page->data());
+    const Page::PageSize PAGE_SIZE = 512;
+    auto data                      = std::make_unique<std::byte[]>(PAGE_SIZE);
+    common::SerializeHex("6d6b7644422066696c652076310000000989c9c0f6",
+                         common::ByteSpan(data.get(), PAGE_SIZE));
+    auto page = std::make_shared<Page>(0, std::move(data), PAGE_SIZE);
+
     Header sut(page);
     Page::PageIndex new_count = 0x0910bc1e;
 
