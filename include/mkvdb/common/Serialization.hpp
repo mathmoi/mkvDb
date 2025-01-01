@@ -44,7 +44,7 @@ namespace mkvdb::common
 #elif defined(MKVDB_USE_GNUC_SWAP)
         return __builtin_bswap16(v);
 #else
-#    warning                                                                             \
+#    warning                                                                                       \
       "This pure c++ version of ReverseBytes is provided as a last resort and might not be optimal. It might be helpfull to add a compiler specific version for your platform/compiler."
         return ((v & 0xff00) >> 8) | ((v & 0x00ff) << 8);
 #endif
@@ -58,7 +58,7 @@ namespace mkvdb::common
 #elif defined(MKVDB_USE_GNUC_SWAP)
         return __builtin_bswap32(v);
 #else
-#    warning                                                                             \
+#    warning                                                                                       \
       "This pure c++ version of ReverseBytes is provided as a last resort and might not be optimal. It might be helpfull to add a compiler specific version for your platform/compiler."
         v = ((v & 0xff00ff00) >> 8) | ((v & 0x00ff00ff) << 8);
         v = ((v & 0xffff0000) >> 16) | ((v & 0x0000ffff) << 16);
@@ -74,14 +74,11 @@ namespace mkvdb::common
 #elif defined(MKVDB_USE_GNUC_SWAP)
         return __builtin_bswap64(v);
 #else
-#    warning                                                                             \
+#    warning                                                                                       \
       "This pure c++ version of ReverseBytes is provided as a last resort and might not be optimal. It might be helpfull to add a compiler specific version for your platform/compiler."
-        v = ((v & UINT64_C(0xff00ff00ff00ff00)) >> 8) |
-            ((v & UINT64_C(0x00ff00ff00ff00ff)) << 8);
-        v = ((v & UINT64_C(0xffff0000ffff0000)) >> 16) |
-            ((v & UINT64_C(0x0000ffff0000ffff)) << 16);
-        v = ((v & UINT64_C(0xffffffff00000000)) >> 32) |
-            ((v & UINT64_C(0x00000000ffffffff)) << 32);
+        v = ((v & UINT64_C(0xff00ff00ff00ff00)) >> 8) | ((v & UINT64_C(0x00ff00ff00ff00ff)) << 8);
+        v = ((v & UINT64_C(0xffff0000ffff0000)) >> 16) | ((v & UINT64_C(0x0000ffff0000ffff)) << 16);
+        v = ((v & UINT64_C(0xffffffff00000000)) >> 32) | ((v & UINT64_C(0x00000000ffffffff)) << 32);
         return v;
 #endif
     }

@@ -5,10 +5,10 @@
 #include "mkvdb/pager/Header.hpp"
 
 #include "../RandomBlob.hpp"
-#include "catch2/matchers/catch_matchers_range_equals.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 #include <algorithm>
 
@@ -77,9 +77,8 @@ TEST_CASE("Pager::GetPage returns the correct page content")
 
     auto page = sut.GetPage(index);
 
-    REQUIRE_THAT(
-      page->data(),
-      Catch::Matchers::RangeEquals(blob.data().subspan(page_size * index, page_size)));
+    REQUIRE_THAT(page->data(),
+                 Catch::Matchers::RangeEquals(blob.data().subspan(page_size * index, page_size)));
 }
 
 TEST_CASE("Pager::WriteModifiedPages write the pages marked as modified")
@@ -106,10 +105,9 @@ TEST_CASE("Pager::WriteModifiedPages write the pages marked as modified")
 
     REQUIRE_THAT(file.data().subspan(index_modified_page * page_size, page_size),
                  Catch::Matchers::RangeEquals(modified_page_content.data()));
-    REQUIRE_THAT(
-      file.data().subspan(index_unmodified_page * page_size, page_size),
-      Catch::Matchers::RangeEquals(
-        original_content.data().subspan(index_unmodified_page * page_size, page_size)));
+    REQUIRE_THAT(file.data().subspan(index_unmodified_page * page_size, page_size),
+                 Catch::Matchers::RangeEquals(
+                   original_content.data().subspan(index_unmodified_page * page_size, page_size)));
 }
 
 TEST_CASE("Pager::WriteModifiedPages pages not marked as modified are not written")
@@ -132,7 +130,7 @@ TEST_CASE("Pager::WriteModifiedPages pages not marked as modified are not writte
               page->data().begin());
     sut.WriteModifiedPages();
 
-    REQUIRE_THAT(file.data().subspan(index * page_size, page_size),
-                 Catch::Matchers::RangeEquals(
-                   original_content.data().subspan(index * page_size, page_size)));
+    REQUIRE_THAT(
+      file.data().subspan(index * page_size, page_size),
+      Catch::Matchers::RangeEquals(original_content.data().subspan(index * page_size, page_size)));
 }
