@@ -16,6 +16,9 @@ namespace mkvdb::common
     // Offset in a file
     typedef std::uint64_t FileOffset;
 
+    // Offset in a page
+    typedef std::uint16_t PageOffset;
+
 } // namespace mkvdb::common
 
 #endif // MKVDB_COMMON_TYPES_HPP_
