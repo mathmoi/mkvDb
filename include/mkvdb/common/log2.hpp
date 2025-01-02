@@ -22,7 +22,7 @@
 
 namespace mkvdb::common
 {
-    // Get the integral log base 2 of a number (aka the position of the highest bit set).
+    /// Get the integral log base 2 of a number (aka the position of the highest bit set).
     inline std::uint32_t log2(std::uint32_t mask)
     {
         // A : The value is not zero
@@ -36,12 +36,12 @@ namespace mkvdb::common
 #elif defined(MKVDB_USE_GNUC_BUILTIN)
         return 31 - __builtin_clz(mask);
 #else
-#    warning                                                                             \
+#    warning                                                                                       \
       "This pure c++ version of BitScanReverse is provided as a last resort and might not be optimal. It might be helpfull to add a compiler specific version for your platform/compiler."
-        static const int MultiplyDeBruijnBitPosition[32] = {
-            0, 9,  1,  10, 13, 21, 2,  29, 11, 14, 16, 18, 22, 25, 3, 30,
-            8, 12, 20, 28, 15, 17, 24, 7,  19, 27, 23, 6,  26, 5,  4, 31
-        };
+        static const int MultiplyDeBruijnBitPosition[32] = { 0,  9,  1,  10, 13, 21, 2,  29,
+                                                             11, 14, 16, 18, 22, 25, 3,  30,
+                                                             8,  12, 20, 28, 15, 17, 24, 7,
+                                                             19, 27, 23, 6,  26, 5,  4,  31 };
 
         mask |= mask >> 1;
         mask |= mask >> 2;

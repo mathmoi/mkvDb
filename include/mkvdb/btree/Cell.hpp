@@ -8,30 +8,30 @@
 
 namespace mkvdb::btree
 {
-    // Represents a cell in a B-Tree node. A cell is a structure that contains a key and a value of
-    // arbitrary sizes.
+    /// Represents a cell in a B-Tree node. A cell is a structure that contains a key and a value of
+    /// arbitrary sizes.
     class Cell
     {
     public:
-        // Constructor, creates a cell from a buffer.
-        // @pre The buffer must have exactly the size required to store the data it contains.
+        /// Constructor, creates a cell from a buffer.
+        /// @pre The buffer must have exactly the size required to store the data it contains.
         inline Cell(common::ByteSpan buffer);
 
-        // Constructor, creates a new cell in the buffer with the given key and value.
-        // @param buffer Buffer where the cell will be stored.
-        // @param key Key of the cell.
-        // @param value Value of the cell.
-        // @pre The buffer must have exactly enough space to store the cell.
+        /// Constructor, creates a new cell in the buffer with the given key and value.
+        /// @param buffer Buffer where the cell will be stored.
+        /// @param key Key of the cell.
+        /// @param value Value of the cell.
+        /// @pre The buffer must have exactly enough space to store the cell.
         Cell(common::ByteSpan buffer, common::ConstByteSpan key, common::ConstByteSpan value);
 
-        // Calculate the size required to store a cell with the given key and value sizes.
+        /// Calculate the size required to store a cell with the given key and value sizes.
         static inline common::ValueSize CalculateRequiredSize(common::ValueSize key_size,
                                                               common::ValueSize value_size);
 
-        // Get the key of the cell.
+        /// Get the key of the cell.
         inline common::ConstByteSpan key() const;
 
-        // Get the value of the cell.
+        /// Get the value of the cell.
         inline common::ConstByteSpan value() const;
 
     private:

@@ -7,40 +7,39 @@
 
 namespace mkvdb::btree
 {
-    // Class representing the header part of a btree nodes.
+    /// Class representing the header part of a btree nodes.
     class NodeHeader
     {
     public:
         typedef std::uint16_t NodeSize;
         typedef std::uint32_t ByteSize;
 
-        // Size of the buffer needed to store the NodeHeader.
+        /// Size of the buffer needed to store the NodeHeader.
         static const common::FileOffset HEADER_SIZE = 8;
 
-        // Constructor.
-        // @param buffer Buffer where the NodeHeader read and write it's data. The buffer must be of
-        // HEADER_SIZE size.
+        /// Constructor.
+        /// @param buffer Buffer where the NodeHeader read and write it's data. The buffer must be
+        /// of HEADER_SIZE size.
         inline NodeHeader(common::ByteSpan buffer);
 
-        // Returns the number of items in the node.
+        /// Returns the number of items in the node.
         inline NodeSize size() const;
 
-        // Set the number of items in the node.
+        /// Set the number of items in the node.
         inline void size(NodeSize new_byte_size);
 
-        // Returns the total payload size in bytes.
+        /// Returns the total payload size in bytes.
         inline ByteSize byte_size() const;
 
-        // Set the total payload size in bytes
+        /// Set the total payload size in bytes
         inline void byte_size(ByteSize new_byte_size);
 
-        // Returns the size of the unallocated space in the node.
-        //
-        // The unallocated space is the space between the slot array and the first cell content
-        // location. This should not be confused with the free space in the node.
+        /// Returns the size of the unallocated space in the node. The unallocated space is the
+        /// space between the slot array and the first cell content location. This should not be
+        /// confused with the free space in the node.
         inline NodeSize unallocated_space() const;
 
-        // Set the size of the unallocated space in the node.
+        /// Set the size of the unallocated space in the node.
         inline void unallocated_space(NodeSize new_unallocated_space);
 
     private:

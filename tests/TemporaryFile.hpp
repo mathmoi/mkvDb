@@ -5,18 +5,18 @@
 
 namespace mkvdb::tests
 {
-    // This class provide a temporary filename (does not create the file). When
-    // the object is destroyed if the file exists it deletes it.
+    /// This class provide a temporary filename (does not create the file). When the object is
+    /// destroyed if the file exists it deletes it.
     class TemporaryFile
     {
     public:
-        // Constructor
+        /// Constructor
         TemporaryFile();
 
-        // Destructor
+        /// Destructor
         ~TemporaryFile();
 
-        // Returns the filename
+        /// Returns the filename
         std::string filename() const;
 
     private:

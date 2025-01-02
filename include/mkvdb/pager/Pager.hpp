@@ -12,23 +12,23 @@
 
 namespace mkvdb::pager
 {
-    // Class responsible for separating the database into pages that can be read and
-    // written as single blocks.
+    /// Class responsible for separating the database into pages that can be read and
+    /// written as single blocks.
     class Pager
     {
     public:
-        // Constructor
+        /// Constructor
         Pager(fs::IFile& file);
 
-        // Get a pointer to a specific page.
+        /// Get a pointer to a specific page.
         std::shared_ptr<Page> GetPage(Page::PageIndex index);
 
-        // Returns a new page.
-        // The new page is either added at the end of the files or comme from a previously
-        // used page that is now on the free list. The content of the page is unspecified.
+        /// Returns a new page. The new page is either added at the end of the files or comme from a
+        /// previously used page that is now on the free list. The content of the page is
+        /// unspecified.
         std::shared_ptr<Page> GetNewPage();
 
-        // Write on disk the pages that are modified.
+        /// Write on disk the pages that are modified.
         void WriteModifiedPages();
 
     private:
@@ -39,4 +39,4 @@ namespace mkvdb::pager
     };
 } // namespace mkvdb::pager
 
-#endif // MKVDB_PAGER_PAGER_HPP_
+#endif /// MKVDB_PAGER_PAGER_HPP_

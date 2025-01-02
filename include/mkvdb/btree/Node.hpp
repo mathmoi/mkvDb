@@ -9,44 +9,38 @@
 
 namespace mkvdb::btree
 {
-    // Base class for all nodes (internal and leaf) in a b+tree.
+    /// Base class for all nodes (internal and leaf) in a b+tree.
     class Node
     {
     public:
-        // Constructor.
-        //
-        // Parameters:
-        //  page: Page containing the nodes data.
+        /// Constructor.
+        ///
+        /// Parameters:
+        ///  page: Page containing the nodes data.
         inline Node(pager::Page& page)
         : page_(page),
           header_(page_.content().subspan(0, NodeHeader::HEADER_SIZE))
         {
         }
 
-        // Initialize a new node
+        /// Initialize a new node
         void InitializeNewNode()
         {
             header_.size(0);
             header_.byte_size(0);
         }
 
-        /**
-         * @brief Returns the size of the node.
-         * @return The size of the node.
-         */
+        /// Returns the size of the node.
+        /// @return The size of the node.
         NodeHeader::NodeSize size() const { return header_.size(); }
 
-        /**
-         * @brief Returns the byte size of the node.
-         * @return The byte size of the node.
-         */
+        /// Returns the byte size of the node.
+        /// @return The byte size of the node.
         NodeHeader::ByteSize byte_size() const { return header_.byte_size(); }
 
-        /**
-         * @brief Inserts a key/value pair into the node.
-         * @param key The key to insert.
-         * @param value The value to insert.
-         */
+        /// @brief Inserts a key/value pair into the node.
+        /// @param key The key to insert.
+        /// @param value The value to insert.
         void Insert(common::ConstByteSpan key, common::ConstByteSpan value);
 
     private:

@@ -7,20 +7,20 @@
 
 namespace mkvdb::common
 {
-    // Span of bytes
+    /// Span of bytes
     typedef std::span<std::byte> ByteSpan;
 
-    // Span of const bytes
+    /// Span of const bytes
     typedef std::span<const std::byte> ConstByteSpan;
 
-    // Offset in a file
+    /// Offset in a file
     typedef std::uint64_t FileOffset;
 
-    // Offset in a page
+    /// Offset in a page
     typedef std::uint16_t PageOffset;
 
-    // Size of a key or values. Keys and Values can have a size of up to 2^32-1 bytes, so their size
-    // is stored in a 32-bit unsigned integer.
+    /// Size of a key or values. Keys and Values can have a size of up to 2^32-1 bytes, so their
+    /// size is stored in a 32-bit unsigned integer.
     using ValueSize = std::uint32_t;
 
 } // namespace mkvdb::common

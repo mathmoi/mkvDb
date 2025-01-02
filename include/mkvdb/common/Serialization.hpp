@@ -36,7 +36,7 @@
 
 namespace mkvdb::common
 {
-    // Swap the bytes of a 16 bits integer.
+    /// Swap the bytes of a 16 bits integer.
     inline std::uint16_t ReverseBytes(std::uint16_t v)
     {
 #if defined(MKVDB_USE_MSC_SWAP)
@@ -50,7 +50,7 @@ namespace mkvdb::common
 #endif
     }
 
-    // Swap the bytes of a 32 bits integer.
+    /// Swap the bytes of a 32 bits integer.
     inline std::uint32_t ReverseBytes(std::uint32_t v)
     {
 #if defined(MKVDB_USE_MSC_SWAP)
@@ -66,7 +66,7 @@ namespace mkvdb::common
 #endif
     }
 
-    // Swap the bytes of a 64 bits integer.
+    /// Swap the bytes of a 64 bits integer.
     inline std::uint64_t ReverseBytes(std::uint64_t v)
     {
 #if defined(MKVDB_USE_MSC_SWAP)
@@ -83,12 +83,15 @@ namespace mkvdb::common
 #endif
     }
 
-    // This method prevents implicit conversion while calling the type specific
-    // ReverseBytes functions.
+    /// This method prevents implicit conversion while calling the type specific
+    /// ReverseBytes functions.
     template<class T>
     void ReverseBytes(T) = delete;
 
-    // Serialize a string in an array of byte.
+    /// Serialize a string in an array of byte.
+    /// @param source The string to serialize.
+    /// @param buffer The buffer where to write the serialized string.
+    /// @pre The buffer must be at least source.length() + 1 bytes long.
     inline void Serialize(std::string_view source, ByteSpan buffer)
     {
         assert(source.length() + 1 <= buffer.size_bytes());
@@ -96,8 +99,11 @@ namespace mkvdb::common
         std::strncpy((char*) buffer.data(), source.data(), buffer.size_bytes());
     }
 
-    // Serialize an unsigned integer. The bytes written are in big-endian order no matter
-    // what the order of the system is.
+    /// Serialize an unsigned integer. The bytes written are in big-endian order no matter
+    /// what the order of the system is.
+    /// @param source The integer to serialize.
+    /// @param buffer The buffer where to write the serialized integer.
+    /// @pre The buffer must be at least sizeof(Integer) bytes long.
     template<typename Integer,
              std::enable_if_t<std::is_integral<Integer>::value, bool>            = true,
              std::enable_if_t<!std::is_signed<Integer>::value, bool>             = true,
@@ -115,7 +121,10 @@ namespace mkvdb::common
         std::copy(ptr, ptr + sizeof(Integer), buffer.data());
     }
 
-    // Serialize an 8 bits unsigned integer.
+    /// Serialize an 8 bits unsigned integer.
+    /// @param source The integer to serialize.
+    /// @param buffer The buffer where to write the serialized integer.
+    /// @pre The buffer must be at least sizeof(Integer) bytes long.
     template<typename Integer,
              std::enable_if_t<std::is_integral<Integer>::value, bool>           = true,
              std::enable_if_t<!std::is_signed<Integer>::value, bool>            = true,
@@ -126,19 +135,21 @@ namespace mkvdb::common
         *buffer.data() = static_cast<std::byte>(source);
     }
 
-    // Serialize a single character containing an hexa-decimal character into a byte.
+    /// Serialize a single character containing an hexa-decimal character into a byte.
     std::byte SerializeHex(char source);
 
-    // Serialize a string containing an arbitrary long hexa-decimal value into a specified
-    // buffer.
+    /// Serialize a string containing an arbitrary long hexa-decimal value into a specified
+    /// buffer.
     void SerializeHex(std::string_view source, ByteSpan buffer);
 
-    // Serialize a string containing an arbitrary long hexa-decimal value into a vector
-    // of bytes.
+    /// Serialize a string containing an arbitrary long hexa-decimal value into a vector
+    /// of bytes.
     std::vector<std::byte> SerializeHex(std::string_view source);
 
-    // Deserialize an unsigned integer. The bytes read are assumed to be in big-endian
-    // order and their order is reversed if we are on a little-endian system.
+    /// Deserialize an unsigned integer. The bytes read are assumed to be in big-endian
+    /// order and their order is reversed if we are on a little-endian system.
+    /// @param buffer The buffer containing the serialized integer.
+    /// @pre The buffer must be at least sizeof(Integer) bytes long.
     template<typename Integer,
              std::enable_if_t<std::is_integral<Integer>::value, bool>            = true,
              std::enable_if_t<!std::is_signed<Integer>::value, bool>             = true,
@@ -160,7 +171,9 @@ namespace mkvdb::common
         return value;
     }
 
-    // Deserialize an 8 bits unsigned integer.
+    /// Deserialize an 8 bits unsigned integer.
+    /// @param buffer The buffer containing the serialized integer.
+    /// @pre The buffer must be at least sizeof(Integer) bytes long.
     template<typename Integer,
              std::enable_if_t<std::is_integral<Integer>::value, bool>           = true,
              std::enable_if_t<!std::is_signed<Integer>::value, bool>            = true,
@@ -171,8 +184,8 @@ namespace mkvdb::common
         return static_cast<Integer>(buffer.data()[0]);
     }
 
-    // Deserialize a ConstByteSpan into a string representing the source data in
-    // hexadecimal.
+    /// Deserialize a ConstByteSpan into a string representing the source data in
+    /// hexadecimal.
     std::string DeserializeHex(ConstByteSpan source);
 
 } // namespace mkvdb::common
