@@ -11,8 +11,8 @@ namespace mkvdb::btree
     class NodeHeader
     {
     public:
-        typedef std::uint16_t NodeSize;
-        typedef std::uint32_t ByteSize;
+        using NodeSize = std::uint16_t;
+        using ByteSize = std::uint32_t;
 
         /// Size of the buffer needed to store the NodeHeader.
         static const common::FileOffset HEADER_SIZE = 8;

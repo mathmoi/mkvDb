@@ -12,8 +12,8 @@ namespace mkvdb::pager
     class Page
     {
     public:
-        typedef common::FileOffset PageSize;
-        typedef std::uint32_t PageIndex;
+        using PageSize  = common::FileOffset;
+        using PageIndex = std::uint32_t;
 
         /// Constructor.
         /// @param index Index of the page in it's parent file.
